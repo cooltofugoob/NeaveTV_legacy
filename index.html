@@ -9,13 +9,16 @@
     <meta http-equiv="Cache-Control" content="no-store">
 </head>
 <body>
-    <video id="videoPlayer" autoplay loop>
+    <video id="videoPlayer" autoplay playsinline>
         <source src="color_test_television.mp4" type="video/mp4">
         Your browser does not support the video tag.
     </video>
     <button id="invisibleButton"></button>
     <div class="scanlines"></div>
-    </div>
+    <img id="tvNoise" src="addit/tv_noise.gif" class="noise-overlay">
+    <audio id="noiseAudio" loop>
+        <source src="addit/tv_noise_sound.mp3" type="audio/mpeg">
+    </audio>
     <a href="https://github.com/amogus-jpg" class="custom-image-link">
         <img src="addit/aj_pfp.png" alt="Custom Image" class="custom-image">
     </a>
