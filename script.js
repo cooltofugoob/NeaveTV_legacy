@@ -81,80 +81,53 @@ const videos = [
     'videos/tinker-tailor.mp4'
 ];
 
-let videoPlayer = document.getElementById('videoPlayer');
-const noiseOverlay = document.getElementById('tvNoise');
+const videoPlayer = document.getElementById('videoPlayer');
+const noiseOverlay = document.querySelector('.noise-overlay');
 const noiseAudio = document.getElementById('noiseAudio');
-let isAudioEnabled = false; // Для обработки автовоспроизведения
+let isAudioEnabled = false;
 
-const playSoundEffect = () => {
-    const audioContext = new AudioContext();
-
-    fetch('addit/click_sfx.mp3')
-        .then(response => response.arrayBuffer())
-        .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer))
-        .then(audioBuffer => {
-            const source = audioContext.createBufferSource();
-            source.buffer = audioBuffer;
-
-            source.connect(audioContext.destination);
-
-            source.start();
-        })
-        .catch(error => {
-            console.error('Error loading sound effect:', error);
-        });
-};
-
-// Активация звука при первом клике
+// Активация аудио
 const enableAudio = () => {
     if (!isAudioEnabled) {
-        noiseAudio.play().then(() => {
-            isAudioEnabled = true;
-            noiseAudio.pause();
-        }).catch(() => {});
+        noiseAudio.play()
+            .then(() => {
+                noiseAudio.pause();
+                noiseAudio.currentTime = 0;
+                isAudioEnabled = true;
+            })
+            .catch(() => {});
     }
 };
 
 // Показать шум
 const showNoise = () => {
-    noiseOverlay.classList.add('noise-visible');
+    noiseOverlay.style.opacity = '1';
+    videoPlayer.style.opacity = '0';
     if (isAudioEnabled) noiseAudio.play();
 };
 
 // Скрыть шум
 const hideNoise = () => {
-    noiseOverlay.classList.remove('noise-visible');
+    noiseOverlay.style.opacity = '0';
     noiseAudio.pause();
+    videoPlayer.style.opacity = '1';
 };
 
 // Инициализация
-showNoise();
+document.addEventListener('DOMContentLoaded', () => {
+    showNoise();
+    videoPlayer.onended = showNoise;
+});
 
-// Обновленная функция воспроизведения видео
-const playVideoWithSound = (videoSrc) => {
-    hideNoise();
+// Клик-обработчик
+document.getElementById('invisibleButton').addEventListener('click', () => {
+    enableAudio();
     
-    // Очистка предыдущего видео
-    videoPlayer.pause();
-    videoPlayer.removeAttribute('src');
-    videoPlayer.load();
+    const randomVideo = videos[Math.floor(Math.random() * videos.length)];
     
-    // Установка нового источника
-    videoPlayer.src = videoSrc;
-    videoPlayer.play().catch(() => {});
-
-    // Обработка окончания видео
-    videoPlayer.onended = () => {
-        showNoise();
-    };
-
-    playSoundEffect();
-};
-
-// Обработчик клика
-const invisibleButton = document.getElementById('invisibleButton');
-invisibleButton.addEventListener('click', () => {
-    enableAudio(); // Активировать звук при первом клике
-    const randomIndex = Math.floor(Math.random() * videos.length);
-    playVideoWithSound(videos[randomIndex]);
+    // Загрузка видео
+    videoPlayer.src = randomVideo;
+    videoPlayer.play()
+        .then(() => hideNoise())
+        .catch(() => showNoise());
 });
