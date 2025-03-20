@@ -3,25 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neave.TV - Television without context</title>
-    <link rel="icon" type="image/png" href="addit/favicon.png">
+    <title>Neave.TV</title>
+    <link rel="icon" href="addit/favicon.png">
     <link rel="stylesheet" href="styles.css">
     <meta http-equiv="Cache-Control" content="no-store">
 </head>
 <body>
-    <video id="videoPlayer" autoplay playsinline>
-        <source src="color_test_television.mp4" type="video/mp4">
-        Your browser does not support the video tag.
-    </video>
+    <!-- Шум телевизора -->
+    <div class="noise-overlay"></div>
+
+    <!-- Видеоплеер -->
+    <video id="videoPlayer" playsinline muted></video>
+
+    <!-- Кнопка-триггер -->
     <button id="invisibleButton"></button>
+
+    <!-- Доп элементы -->
     <div class="scanlines"></div>
-    <img id="tvNoise" src="addit/tv_noise.gif" class="noise-overlay">
-    <audio id="noiseAudio" loop>
-        <source src="addit/tv_noise_sound.mp3" type="audio/mpeg">
-    </audio>
     <a href="https://github.com/amogus-jpg" class="custom-image-link">
-        <img src="addit/aj_pfp.png" alt="Custom Image" class="custom-image">
+        <img src="addit/aj_pfp.png" class="custom-image">
     </a>
+
+    <!-- Аудио для шума -->
+    <audio id="noiseAudio" loop>
+        <source src="addit/tv_noise.ogg" type="audio/ogg">
+        <source src="addit/tv_noise.mp3" type="audio/mpeg">
+    </audio>
+
     <script src="script.js"></script>
 </body>
 </html>
