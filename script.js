@@ -84,7 +84,9 @@ const videos = [
 const videoPlayer = document.getElementById('videoPlayer');
 const noiseOverlay = document.querySelector('.noise-overlay');
 const noiseAudio = document.getElementById('noiseAudio');
-let isAudioEnabled = false;
+let isAudioEnabled = true;
+
+noiseAudio.volume = 0.5;
 
 // Активация аудио
 const enableAudio = () => {
