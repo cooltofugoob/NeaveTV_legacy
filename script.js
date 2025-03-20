@@ -82,6 +82,9 @@ const videos = [
 ];
 
 let videoPlayer = document.getElementById('videoPlayer');
+const noiseOverlay = document.getElementById('tvNoise');
+const noiseAudio = document.getElementById('noiseAudio');
+let isAudioEnabled = false; // Для обработки автовоспроизведения
 
 const playSoundEffect = () => {
     const audioContext = new AudioContext();
@@ -102,26 +105,56 @@ const playSoundEffect = () => {
         });
 };
 
-const playVideoWithSound = (videoSrc) => {
-    if (videoPlayer.src) {
-        videoPlayer.pause();
-        videoPlayer.src = '';
+// Активация звука при первом клике
+const enableAudio = () => {
+    if (!isAudioEnabled) {
+        noiseAudio.play().then(() => {
+            isAudioEnabled = true;
+            noiseAudio.pause();
+        }).catch(() => {});
     }
+};
 
-    const newVideo = document.createElement('video');
-    newVideo.src = videoSrc;
+// Показать шум
+const showNoise = () => {
+    noiseOverlay.classList.add('noise-visible');
+    if (isAudioEnabled) noiseAudio.play();
+};
 
-    videoPlayer.parentNode.replaceChild(newVideo, videoPlayer);
-    videoPlayer = newVideo;
+// Скрыть шум
+const hideNoise = () => {
+    noiseOverlay.classList.remove('noise-visible');
+    noiseAudio.pause();
+};
 
-    newVideo.play();
+// Инициализация
+showNoise();
+
+// Обновленная функция воспроизведения видео
+const playVideoWithSound = (videoSrc) => {
+    hideNoise();
+    
+    // Очистка предыдущего видео
+    videoPlayer.pause();
+    videoPlayer.removeAttribute('src');
+    videoPlayer.load();
+    
+    // Установка нового источника
+    videoPlayer.src = videoSrc;
+    videoPlayer.play().catch(() => {});
+
+    // Обработка окончания видео
+    videoPlayer.onended = () => {
+        showNoise();
+    };
 
     playSoundEffect();
 };
 
+// Обработчик клика
 const invisibleButton = document.getElementById('invisibleButton');
 invisibleButton.addEventListener('click', () => {
+    enableAudio(); // Активировать звук при первом клике
     const randomIndex = Math.floor(Math.random() * videos.length);
-    const randomVideo = videos[randomIndex];
-    playVideoWithSound(randomVideo);
+    playVideoWithSound(videos[randomIndex]);
 });
