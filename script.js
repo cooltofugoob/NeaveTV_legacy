@@ -129,6 +129,7 @@ document.getElementById('invisibleButton').addEventListener('click', () => {
     
     // Загрузка видео
     videoPlayer.src = randomVideo;
+    videoPlayer.muted = false;
     videoPlayer.play()
         .then(() => hideNoise())
         .catch(() => showNoise());
